@@ -8,7 +8,7 @@ param(
   [string]$Branch = "main"
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 function Require-Command($cmd, $hint) {
@@ -18,9 +18,15 @@ function Require-Command($cmd, $hint) {
   }
 }
 
-function Run($exe, [string[]]$args) {
-  & $exe @args
-  return $LASTEXITCODE
+function Run-Capture([string]$exe, [string[]]$argv) {
+  # Evita NativeCommandError quando um comando escreve no stderr mas sai com 0
+  $oldPref = $global:ErrorActionPreference
+  $global:ErrorActionPreference = "SilentlyContinue"
+  $out = & $exe @argv 2>&1
+  $code = $LASTEXITCODE
+  $global:ErrorActionPreference = $oldPref
+
+  return [pscustomobject]@{ Code = $code; Output = $out }
 }
 
 Require-Command git "Instale o Git e reabra o PowerShell."
@@ -28,32 +34,30 @@ Require-Command gh  "Instale o GitHub CLI (gh) e reabra o PowerShell."
 
 if (-not (Test-Path ".\index.html")) {
   Write-Host "Erro: index.html não encontrado na pasta atual." -ForegroundColor Red
-  Write-Host "Entre na pasta do projeto (cd ...) e rode novamente."
   exit 1
 }
 
-# Checar login do GH
-Run gh @("auth","status") | Out-Null
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "Você não está logado no GitHub CLI." -ForegroundColor Yellow
-  Write-Host "Rode: gh auth login"
+# Login gh
+$r = Run-Capture "gh" @("auth","status")
+if ($r.Code -ne 0) {
+  Write-Host "Você não está logado no GitHub CLI. Rode: gh auth login" -ForegroundColor Yellow
+  Write-Host ($r.Output -join "`n")
   exit 1
 }
 
-# Descobrir owner
 $Owner = (gh api user -q ".login").Trim()
-$RemoteUrl = "https://github.com/$Owner/$RepoName.git"
 $FullRepo = "$Owner/$RepoName"
+$RemoteHttps = "https://github.com/$FullRepo.git"
 
-# Init git se precisar
+# Init git
 if (-not (Test-Path ".\.git")) {
-  Run git @("init") | Out-Null
+  Run-Capture "git" @("init") | Out-Null
 }
 
-# Garantir branch main
-Run git @("checkout","-B",$Branch) | Out-Null
+# Branch
+Run-Capture "git" @("checkout","-B",$Branch) | Out-Null
 
-# .gitignore básico
+# .gitignore
 if (-not (Test-Path ".\.gitignore")) {
 @"
 .DS_Store
@@ -63,61 +67,71 @@ node_modules/
 }
 
 # Stage
-Run git @("add",".") | Out-Null
+Run-Capture "git" @("add",".") | Out-Null
 
-# Ver se existe algo staged
-Run git @("diff","--cached","--quiet") | Out-Null
-$HasStaged = ($LASTEXITCODE -ne 0)  # 1 = tem diff staged
+# HEAD existe?
+$hasHead = ((Run-Capture "git" @("rev-parse","--verify","HEAD")).Code -eq 0)
 
-# Ver se existe HEAD (repo novo não tem)
-Run git @("rev-parse","--verify","HEAD") | Out-Null
-$HasHead = ($LASTEXITCODE -eq 0)
+# Tem diff staged?
+$diffStaged = Run-Capture "git" @("diff","--cached","--quiet")
+$hasStaged = ($diffStaged.Code -ne 0)
 
-if (-not $HasHead -or $HasStaged) {
-  # Faz commit inicial ou commit de mudanças
-  Run git @("commit","-m","Deploy initial static site") | Out-Null
-}
-
-# Repo existe no GitHub?
-Run gh @("repo","view",$FullRepo) | Out-Null
-$RepoExists = ($LASTEXITCODE -eq 0)
-
-if (-not $RepoExists) {
-  Write-Host "Criando repo no GitHub: $FullRepo ($Visibility)..." -ForegroundColor Cyan
-  $visFlag = if ($Visibility -eq "public") { "--public" } else { "--private" }
-  Run gh @("repo","create",$FullRepo,$visFlag,"--confirm") | Out-Null
-}
-
-# Garantir remote origin configurado corretamente
-Run git @("remote","get-url","origin") | Out-Null
-$HasOrigin = ($LASTEXITCODE -eq 0)
-
-if (-not $HasOrigin) {
-  Run git @("remote","add","origin",$RemoteUrl) | Out-Null
-} else {
-  # Ajusta origin caso esteja apontando pra outro lugar
-  $current = (git remote get-url origin).Trim()
-  if ($current -ne $RemoteUrl) {
-    Run git @("remote","set-url","origin",$RemoteUrl) | Out-Null
+if (-not $hasHead -or $hasStaged) {
+  $c = Run-Capture "git" @("commit","-m","Deploy initial static site")
+  if ($c.Code -ne 0) {
+    Write-Host "Erro ao commitar. Saída:" -ForegroundColor Red
+    Write-Host ($c.Output -join "`n")
+    Write-Host ""
+    Write-Host 'Se reclamar de user.name/email:' -ForegroundColor Yellow
+    Write-Host 'git config --global user.name "Seu Nome"' -ForegroundColor Yellow
+    Write-Host 'git config --global user.email "seuemail@exemplo.com"' -ForegroundColor Yellow
+    exit 1
   }
 }
 
+# Repo existe?
+$view = Run-Capture "gh" @("repo","view",$FullRepo)
+if ($view.Code -ne 0) {
+  Write-Host "Criando repo no GitHub: $FullRepo ($Visibility)..." -ForegroundColor Cyan
+  $visFlag = if ($Visibility -eq "public") { "--public" } else { "--private" }
+  $cr = Run-Capture "gh" @("repo","create",$FullRepo,$visFlag,"--confirm")
+  if ($cr.Code -ne 0) {
+    Write-Host "Erro ao criar repo. Saída:" -ForegroundColor Red
+    Write-Host ($cr.Output -join "`n")
+    exit 1
+  }
+}
+
+# Origin (FORÇA HTTPS)
+$origin = Run-Capture "git" @("remote","get-url","origin")
+if ($origin.Code -ne 0) {
+  Run-Capture "git" @("remote","add","origin",$RemoteHttps) | Out-Null
+} else {
+  Run-Capture "git" @("remote","set-url","origin",$RemoteHttps) | Out-Null
+}
+
+Write-Host "Origin: $RemoteHttps" -ForegroundColor DarkGray
+
 # Push
 Write-Host "Fazendo push para origin/$Branch..." -ForegroundColor Cyan
-Run git @("push","-u","origin",$Branch) | Out-Null
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "Erro no push. Verifique se você tem permissão no repo e se o repo foi criado." -ForegroundColor Red
+$p = Run-Capture "git" @("push","-u","origin",$Branch)
+if ($p.Code -ne 0) {
+  Write-Host "❌ Erro no push. Saída completa:" -ForegroundColor Red
+  Write-Host ($p.Output -join "`n")
+  Write-Host ""
+  Write-Host "Dica: rode: gh auth setup-git" -ForegroundColor Yellow
   exit 1
 }
 
-# Habilitar Pages (root)
+# Pages
 Write-Host "Habilitando GitHub Pages..." -ForegroundColor Cyan
-
-# Tenta criar pages
-Run gh @("api","-X","POST","repos/$Owner/$RepoName/pages","-f","source[branch]=$Branch","-f","source[path]=/") | Out-Null
-if ($LASTEXITCODE -ne 0) {
-  # Se já existe, tenta update
-  Run gh @("api","-X","PUT","repos/$Owner/$RepoName/pages","-f","source[branch]=$Branch","-f","source[path]=/") | Out-Null
+$createPages = Run-Capture "gh" @("api","-X","POST","repos/$Owner/$RepoName/pages","-f","source[branch]=$Branch","-f","source[path]=/")
+if ($createPages.Code -ne 0) {
+  $updatePages = Run-Capture "gh" @("api","-X","PUT","repos/$Owner/$RepoName/pages","-f","source[branch]=$Branch","-f","source[path]=/")
+  if ($updatePages.Code -ne 0) {
+    Write-Host "Aviso: não consegui habilitar Pages via API. Saída:" -ForegroundColor Yellow
+    Write-Host ($updatePages.Output -join "`n")
+  }
 }
 
 $PagesUrl = "https://$Owner.github.io/$RepoName/"
@@ -125,5 +139,3 @@ Write-Host ""
 Write-Host "✅ Pronto!" -ForegroundColor Green
 Write-Host "Repo:  https://github.com/$Owner/$RepoName"
 Write-Host "Pages: $PagesUrl"
-Write-Host ""
-Write-Host "Se abrir sem CSS: Ctrl+Shift+R (hard refresh)." -ForegroundColor DarkGray
