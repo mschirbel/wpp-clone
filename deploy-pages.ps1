@@ -1,6 +1,6 @@
 param(
-  [Parameter(Mandatory=$true)]
-  [string]$RepoName,
+  # Se não passar, usa o nome da pasta atual
+  [string]$RepoName = (Split-Path -Leaf (Get-Location).Path),
 
   [ValidateSet("public","private")]
   [string]$Visibility = "public",
@@ -8,7 +8,6 @@ param(
   [string]$Branch = "main"
 )
 
-$ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 function Require-Command($cmd, $hint) {
@@ -19,13 +18,11 @@ function Require-Command($cmd, $hint) {
 }
 
 function Run-Capture([string]$exe, [string[]]$argv) {
-  # Evita NativeCommandError quando um comando escreve no stderr mas sai com 0
   $oldPref = $global:ErrorActionPreference
   $global:ErrorActionPreference = "SilentlyContinue"
   $out = & $exe @argv 2>&1
   $code = $LASTEXITCODE
   $global:ErrorActionPreference = $oldPref
-
   return [pscustomobject]@{ Code = $code; Output = $out }
 }
 
@@ -49,15 +46,17 @@ $Owner = (gh api user -q ".login").Trim()
 $FullRepo = "$Owner/$RepoName"
 $RemoteHttps = "https://github.com/$FullRepo.git"
 
+Write-Host "Repo alvo: $FullRepo" -ForegroundColor Cyan
+
 # Init git
 if (-not (Test-Path ".\.git")) {
   Run-Capture "git" @("init") | Out-Null
 }
 
-# Branch
+# Branch (não importa se escrever no stderr)
 Run-Capture "git" @("checkout","-B",$Branch) | Out-Null
 
-# .gitignore
+# gitignore
 if (-not (Test-Path ".\.gitignore")) {
 @"
 .DS_Store
@@ -76,20 +75,21 @@ $hasHead = ((Run-Capture "git" @("rev-parse","--verify","HEAD")).Code -eq 0)
 $diffStaged = Run-Capture "git" @("diff","--cached","--quiet")
 $hasStaged = ($diffStaged.Code -ne 0)
 
+# Commit se necessário
 if (-not $hasHead -or $hasStaged) {
   $c = Run-Capture "git" @("commit","-m","Deploy initial static site")
   if ($c.Code -ne 0) {
     Write-Host "Erro ao commitar. Saída:" -ForegroundColor Red
     Write-Host ($c.Output -join "`n")
     Write-Host ""
-    Write-Host 'Se reclamar de user.name/email:' -ForegroundColor Yellow
+    Write-Host "Se reclamar de user.name/email:" -ForegroundColor Yellow
     Write-Host 'git config --global user.name "Seu Nome"' -ForegroundColor Yellow
     Write-Host 'git config --global user.email "seuemail@exemplo.com"' -ForegroundColor Yellow
     exit 1
   }
 }
 
-# Repo existe?
+# Criar repo se não existir
 $view = Run-Capture "gh" @("repo","view",$FullRepo)
 if ($view.Code -ne 0) {
   Write-Host "Criando repo no GitHub: $FullRepo ($Visibility)..." -ForegroundColor Cyan
