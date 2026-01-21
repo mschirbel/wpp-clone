@@ -1,7 +1,32 @@
 {
   "calls": [
-    { "nameOrNumber": "Ana", "direction": "out", "status": "answered", "duration": "2 min", "time": "Hoje 12:02" },
-    { "nameOrNumber": "+55 11 9XXXX-1234", "direction": "in", "status": "missed", "duration": "", "time": "Hoje 10:44" },
-    { "nameOrNumber": "João", "direction": "out", "status": "answered", "duration": "7 min", "time": "Ontem 21:18" }
+    {
+      "nameOrNumber": "Marcos (Chefe)",
+      "direction": "in",
+      "status": "missed",
+      "duration": "",
+      "time": "Ontem 21:15"
+    },
+    {
+      "nameOrNumber": "Clara 🤍",
+      "direction": "out",
+      "status": "answered",
+      "duration": "14 min",
+      "time": "Ontem 14:40"
+    },
+    {
+      "nameOrNumber": "Número Desconhecido",
+      "direction": "in",
+      "status": "missed",
+      "duration": "",
+      "time": "Ontem 12:00"
+    },
+    {
+      "nameOrNumber": "Mãe",
+      "direction": "out",
+      "status": "answered",
+      "duration": "32 min",
+      "time": "Sexta"
+    }
   ]
 }

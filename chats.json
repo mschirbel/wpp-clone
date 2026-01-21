@@ -1,8 +1,40 @@
 {
   "chats": [
-    { "name": "Ana", "lastMessage": "Você: fechou, valeu!", "time": "12:41", "unread": 2 },
-    { "name": "Rafa", "lastMessage": "Manda o link depois 🙏", "time": "11:05", "unread": 0 },
-    { "name": "Condomínio", "lastMessage": "Aviso: manutenção no elevador...", "time": "Ontem", "unread": 0, "muted": true },
-    { "name": "João", "lastMessage": "Áudio (0:18)", "time": "Seg", "unread": 0 }
+    {
+      "name": "Clara 🤍",
+      "lastMessage": "Vai tranquila. Qualquer coisa grita.",
+      "time": "19:35",
+      "unread": 0,
+      "photo": "clara_thumb.jpg"
+    },
+    {
+      "name": "Número Desconhecido",
+      "lastMessage": "Sei que você tá lá embaixo.",
+      "time": "22:45",
+      "unread": 1,
+      "photo": "default_user.jpg"
+    },
+    {
+      "name": "Marcos (Chefe)",
+      "lastMessage": "Amanhã a gente resolve tudo. Eu prometo.",
+      "time": "16:25",
+      "unread": 0,
+      "photo": "marcos_thumb.jpg"
+    },
+    {
+      "name": "Sra. Helena",
+      "lastMessage": "Se não pedir demissão, eu acabo com vc.",
+      "time": "13:50",
+      "unread": 0,
+      "photo": "helena_thumb.jpg"
+    },
+    {
+      "name": "🏢 Condomínio Santa Aurora",
+      "lastMessage": "Ricardo Síndico: Elevador social c/ display quebrado. Usem...",
+      "time": "Ontem",
+      "unread": 12,
+      "muted": true,
+      "photo": "predio_thumb.jpg"
+    }
   ]
 }
