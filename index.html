@@ -1,589 +1,262 @@
 <!doctype html>
 <html lang="pt-br">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wpp Clone (HTML+CSS)</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
 
-  <body>
-    <main class="page">
-      <!-- Você pode duplicar a div .phone pra gerar vários "celulares" -->
-      <section class="phone" aria-label="WhatsApp clone">
-        <!-- alvo neutro: serve pra "fechar" a conversa via #home -->
-        <div id="home"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carregando...</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-        <!-- Abas (CSS-only) -->
-        <input class="tab-input" type="radio" name="tab" id="tab-chats" checked />
-        <input class="tab-input" type="radio" name="tab" id="tab-archived" />
-        <input class="tab-input" type="radio" name="tab" id="tab-calls" />
+<body>
+  <main class="page">
+    <section class="phone" aria-label="App Clone">
+      <div id="home"></div>
 
-        <!-- Top bar -->
-        <header class="topbar">
-          <div class="topbar__title">
-            <span class="app-dot" aria-hidden="true"></span>
-            <div>
-              <h1>WhatsApp</h1>
-              <p class="subtitle">online</p>
-            </div>
+      <input class="tab-input" type="radio" name="tab" id="tab-chats" checked />
+      <input class="tab-input" type="radio" name="tab" id="tab-archived" />
+      <input class="tab-input" type="radio" name="tab" id="tab-calls" />
+
+      <header class="topbar">
+        <div class="topbar__title">
+          <span class="app-dot" aria-hidden="true"></span>
+          <div>
+            <h1 id="app-name">App</h1>
+            <p class="subtitle" id="app-status">...</p>
           </div>
+        </div>
+        <div class="topbar__actions">
+          <button class="icon-btn">⌕</button>
+          <button class="icon-btn">⋮</button>
+        </div>
+      </header>
 
-          <div class="topbar__actions" aria-label="Ações">
-            <button class="icon-btn" type="button" aria-label="Buscar">⌕</button>
-            <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
+      <div class="search">
+        <span class="search__icon">⌕</span>
+        <input class="search__input" type="text" placeholder="Pesquisar" />
+      </div>
+
+      <section class="content">
+
+        <div class="screen screen--chats">
+          <div class="section-head">
+            <h2>Chats</h2>
+            <span class="badge" id="badge-chats">0</span>
           </div>
-        </header>
-
-        <!-- Search -->
-        <div class="search">
-          <span class="search__icon" aria-hidden="true">⌕</span>
-          <input class="search__input" type="text" placeholder="Pesquisar" />
+          <div class="list" id="list-chats"></div>
         </div>
 
-        <!-- Content -->
-        <section class="content">
-          <!-- CHATS (principal) -->
-          <div class="screen screen--chats" aria-label="Lista de chats">
-            <div class="section-head">
-              <h2>Chats</h2>
-              <span class="badge">12</span>
-            </div>
-
-            <div class="list">
-              <a class="row row--chat row-link" href="#chat-ana">
-                <div class="avatar" data-initial="A"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Ana</strong>
-                    <span class="meta">12:41</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">Você: fechou, valeu!</span>
-                    <span class="pill">2</span>
-                  </div>
-                </div>
-              </a>
-
-              <a class="row row--chat row-link" href="#chat-rafa">
-                <div class="avatar" data-initial="R"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Rafa</strong>
-                    <span class="meta">11:05</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">Manda o link depois 🙏</span>
-                  </div>
-                </div>
-              </a>
-
-              <a class="row row--chat row-link" href="#chat-condominio">
-                <div class="avatar" data-initial="C"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Condomínio</strong>
-                    <span class="meta">Ontem</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">Aviso: manutenção no elevador...</span>
-                    <span class="pill pill--muted">M</span>
-                  </div>
-                </div>
-              </a>
-
-              <a class="row row--chat row-link" href="#chat-joao">
-                <div class="avatar" data-initial="J"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>João</strong>
-                    <span class="meta">Seg</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">Áudio (0:18)</span>
-                  </div>
-                </div>
-              </a>
-            </div>
+        <div class="screen screen--archived">
+          <div class="section-head">
+            <h2>Arquivados</h2>
+            <span class="badge badge--subtle" id="badge-archived">0</span>
           </div>
+          <div class="list" id="list-archived"></div>
+        </div>
 
-          <!-- ARCHIVED -->
-          <div class="screen screen--archived" aria-label="Chats arquivados">
-            <div class="section-head">
-              <h2>Arquivados</h2>
-              <span class="badge badge--subtle">3</span>
-            </div>
-
-            <div class="list">
-              <a class="row row--chat row-link" href="#chat-mae">
-                <div class="avatar" data-initial="M"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Mãe</strong>
-                    <span class="meta">09:10</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">Boa semana ❤️</span>
-                  </div>
-                </div>
-              </a>
-
-              <a class="row row--chat row-link" href="#chat-trabalho">
-                <div class="avatar" data-initial="T"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Trabalho</strong>
-                    <span class="meta">Sex</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">Checklist atualizado.</span>
-                    <span class="pill">1</span>
-                  </div>
-                </div>
-              </a>
-
-              <a class="row row--chat row-link" href="#chat-grupo-antigo">
-                <div class="avatar" data-initial="G"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Grupo antigo</strong>
-                    <span class="meta">Ago</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">👍</span>
-                  </div>
-                </div>
-              </a>
-            </div>
+        <div class="screen screen--calls">
+          <div class="section-head">
+            <h2>Calls</h2>
+            <span class="badge badge--subtle" id="badge-calls">0</span>
           </div>
-
-          <!-- CALLS -->
-          <div class="screen screen--calls" aria-label="Chamadas">
-            <div class="section-head">
-              <h2>Calls</h2>
-              <span class="badge badge--subtle">5</span>
-            </div>
-
-            <div class="list">
-              <div class="row row--call">
-                <div class="avatar avatar--call" data-initial="A"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>Ana</strong>
-                    <span class="meta">Hoje 12:02</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">
-                      <span class="call-tag call-tag--out">↗</span>
-                      Saída • 2 min
-                    </span>
-                    <span class="call-icon" aria-hidden="true">📞</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row row--call">
-                <div class="avatar avatar--call" data-initial="#"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>+55 11 9XXXX-1234</strong>
-                    <span class="meta">Hoje 10:44</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">
-                      <span class="call-tag call-tag--in">↙</span>
-                      Entrada • Não atendida
-                    </span>
-                    <span class="call-icon" aria-hidden="true">📞</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row row--call">
-                <div class="avatar avatar--call" data-initial="J"></div>
-                <div class="row__main">
-                  <div class="row__top">
-                    <strong>João</strong>
-                    <span class="meta">Ontem 21:18</span>
-                  </div>
-                  <div class="row__bottom">
-                    <span class="preview">
-                      <span class="call-tag call-tag--out">↗</span>
-                      Saída • 7 min
-                    </span>
-                    <span class="call-icon" aria-hidden="true">📞</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Bottom nav -->
-        <nav class="bottomnav" aria-label="Navegação">
-          <label class="tab" for="tab-chats" title="Chats">
-            <span class="tab__icon" aria-hidden="true">💬</span>
-            <span class="tab__text">Chats</span>
-          </label>
-
-          <label class="tab" for="tab-archived" title="Arquivados">
-            <span class="tab__icon" aria-hidden="true">🗄️</span>
-            <span class="tab__text">Archived</span>
-          </label>
-
-          <label class="tab" for="tab-calls" title="Calls">
-            <span class="tab__icon" aria-hidden="true">📞</span>
-            <span class="tab__text">Calls</span>
-          </label>
-        </nav>
-
-        <!-- Floating action -->
-        <button class="fab" type="button" aria-label="Nova conversa">＋</button>
-
-        <!-- ====== Telas de conversa (abrem via :target) ====== -->
-
-        <!-- CHAT: Ana (conversa grande p/ testar scroll) -->
-        <section id="chat-ana" class="chatview" aria-label="Conversa com Ana">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="A"></div>
-              <div>
-                <strong>Ana</strong>
-                <div class="chatbar__sub">online</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Chamar">📞</button>
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="bubble bubble--in">Oi! você conseguiu testar? <span class="time">12:00</span></div>
-            <div class="bubble bubble--out">Sim, abriu aqui. <span class="time">12:01</span></div>
-            <div class="bubble bubble--in">Boa! e a parte do CSS, resolveu? <span class="time">12:02</span></div>
-            <div class="bubble bubble--out">Era o caminho do arquivo 😅 <span class="time">12:03</span></div>
-
-            <div class="dayline"><span>Hoje</span></div>
-
-            <div class="bubble bubble--in">
-              Me manda o que você fez? Quero copiar aqui também.
-              <span class="time">12:05</span>
-            </div>
-            <div class="bubble bubble--out">
-              Fiz o layout, as abas com radio, e abro conversa com :target.
-              <span class="time">12:06</span>
-            </div>
-            <div class="bubble bubble--in">
-              Massa. Dá pra colocar scroll na conversa?
-              <span class="time">12:07</span>
-            </div>
-            <div class="bubble bubble--out">
-              Sim: a área de mensagens fica com overflow-y auto.
-              <span class="time">12:08</span>
-            </div>
-
-            <!-- bloco grande pra forçar scroll -->
-            <div class="bubble bubble--in">
-              Vou mandar um texto grandão só pra gente ver o comportamento: Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              <span class="time">12:10</span>
-            </div>
-            <div class="bubble bubble--out">
-              Beleza. Aqui também vou responder com um texto maior:
-              Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra,
-              est eros bibendum elit, nec luctus magna felis sollicitudin mauris.
-              <span class="time">12:11</span>
-            </div>
-            <div class="bubble bubble--in">
-              Perfeito. Agora mais algumas mensagens rápidas pra aumentar a lista…
-              <span class="time">12:12</span>
-            </div>
-
-            <div class="bubble bubble--out">Mensagem 1 <span class="time">12:13</span></div>
-            <div class="bubble bubble--in">Mensagem 2 <span class="time">12:14</span></div>
-            <div class="bubble bubble--out">Mensagem 3 <span class="time">12:15</span></div>
-            <div class="bubble bubble--in">Mensagem 4 <span class="time">12:16</span></div>
-            <div class="bubble bubble--out">Mensagem 5 <span class="time">12:17</span></div>
-            <div class="bubble bubble--in">Mensagem 6 <span class="time">12:18</span></div>
-            <div class="bubble bubble--out">Mensagem 7 <span class="time">12:19</span></div>
-            <div class="bubble bubble--in">Mensagem 8 <span class="time">12:20</span></div>
-            <div class="bubble bubble--out">Mensagem 9 <span class="time">12:21</span></div>
-            <div class="bubble bubble--in">Mensagem 10 <span class="time">12:22</span></div>
-            <div class="bubble bubble--out">Mensagem 11 <span class="time">12:23</span></div>
-            <div class="bubble bubble--in">Mensagem 12 <span class="time">12:24</span></div>
-            <div class="bubble bubble--out">Mensagem 13 <span class="time">12:25</span></div>
-            <div class="bubble bubble--in">Mensagem 14 <span class="time">12:26</span></div>
-            <div class="bubble bubble--out">Mensagem 15 <span class="time">12:27</span></div>
-            <div class="bubble bubble--in">Mensagem 16 <span class="time">12:28</span></div>
-            <div class="bubble bubble--out">Mensagem 17 <span class="time">12:29</span></div>
-            <div class="bubble bubble--in">Mensagem 18 <span class="time">12:30</span></div>
-            <div class="bubble bubble--out">Mensagem 19 <span class="time">12:31</span></div>
-
-            <div class="bubble bubble--out">
-              Fechou, valeu!
-              <span class="time">12:41</span>
-            </div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
-
-        <!-- CHAT: Rafa (conversa menor) -->
-        <section id="chat-rafa" class="chatview" aria-label="Conversa com Rafa">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="R"></div>
-              <div>
-                <strong>Rafa</strong>
-                <div class="chatbar__sub">visto por último hoje</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Chamar">📞</button>
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="bubble bubble--in">Cara, manda o link depois 🙏 <span class="time">11:02</span></div>
-            <div class="bubble bubble--out">Mando sim! <span class="time">11:03</span></div>
-            <div class="bubble bubble--in">E essa navegação sem JS ficou boa? <span class="time">11:04</span></div>
-            <div class="bubble bubble--out">Ficou! Usei :target e anchors. <span class="time">11:05</span></div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
-
-        <!-- CHAT: Condomínio (conversa média) -->
-        <section id="chat-condominio" class="chatview" aria-label="Conversa com Condomínio">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="C"></div>
-              <div>
-                <strong>Condomínio</strong>
-                <div class="chatbar__sub">silenciado</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="bubble bubble--in">
-              Aviso: manutenção no elevador amanhã, 08:00–12:00.
-              <span class="time">Ontem</span>
-            </div>
-            <div class="bubble bubble--in">
-              Lavanderia do térreo ficará parcialmente interditada.
-              <span class="time">Ontem</span>
-            </div>
-            <div class="bubble bubble--out">
-              Ok, obrigado pelo aviso.
-              <span class="time">Ontem</span>
-            </div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
-
-        <!-- CHAT: João (conversa curta) -->
-        <section id="chat-joao" class="chatview" aria-label="Conversa com João">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="J"></div>
-              <div>
-                <strong>João</strong>
-                <div class="chatbar__sub">offline</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Chamar">📞</button>
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="bubble bubble--in">Áudio (0:18) <span class="time">Seg</span></div>
-            <div class="bubble bubble--out">Depois eu ouço! <span class="time">Seg</span></div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
-
-        <!-- ARCHIVED CHAT: Mãe (conversa grande p/ testar scroll) -->
-        <section id="chat-mae" class="chatview" aria-label="Conversa com Mãe">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="M"></div>
-              <div>
-                <strong>Mãe</strong>
-                <div class="chatbar__sub">visto por último hoje</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Chamar">📞</button>
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="dayline"><span>Semana passada</span></div>
-
-            <div class="bubble bubble--in">Filho, como você está? <span class="time">08:02</span></div>
-            <div class="bubble bubble--out">Tudo bem por aqui 🙂 <span class="time">08:10</span></div>
-            <div class="bubble bubble--in">Comeu direitinho? <span class="time">08:11</span></div>
-            <div class="bubble bubble--out">Sim, fiz marmitas 😂 <span class="time">08:12</span></div>
-
-            <div class="dayline"><span>Hoje</span></div>
-
-            <!-- mensagens grandes pra scroll -->
-            <div class="bubble bubble--in">
-              Só pra testar rolagem: eu vou escrever bastante aqui.
-              Lembra de beber água, descansar, e não ficar o dia inteiro sentado.
-              Se puder, dá uma caminhada, respira, e depois volta pro que precisa fazer.
-              <span class="time">09:00</span>
-            </div>
-
-            <div class="bubble bubble--out">
-              Pode deixar! Hoje eu vou tentar organizar a rotina.
-              Também tô montando um layout “tipo WhatsApp” só com HTML e CSS, ficou bem legal.
-              <span class="time">09:03</span>
-            </div>
-
-            <div class="bubble bubble--in">
-              Que legal! Mas não exagera no computador.
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              <span class="time">09:05</span>
-            </div>
-
-            <div class="bubble bubble--out">
-              Tá bom 😄 vou parar um pouco e depois volto.
-              <span class="time">09:06</span>
-            </div>
-
-            <!-- várias mensagens pra aumentar o histórico -->
-            <div class="bubble bubble--in">Mensagem extra 1 <span class="time">09:07</span></div>
-            <div class="bubble bubble--in">Mensagem extra 2 <span class="time">09:08</span></div>
-            <div class="bubble bubble--in">Mensagem extra 3 <span class="time">09:09</span></div>
-            <div class="bubble bubble--in">Mensagem extra 4 <span class="time">09:10</span></div>
-            <div class="bubble bubble--in">Mensagem extra 5 <span class="time">09:11</span></div>
-            <div class="bubble bubble--in">Mensagem extra 6 <span class="time">09:12</span></div>
-            <div class="bubble bubble--in">Mensagem extra 7 <span class="time">09:13</span></div>
-            <div class="bubble bubble--in">Mensagem extra 8 <span class="time">09:14</span></div>
-            <div class="bubble bubble--in">Mensagem extra 9 <span class="time">09:15</span></div>
-            <div class="bubble bubble--in">Mensagem extra 10 <span class="time">09:16</span></div>
-
-            <div class="bubble bubble--out">Boa semana ❤️ <span class="time">09:10</span></div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
-
-        <!-- ARCHIVED CHAT: Trabalho (conversa média/grande) -->
-        <section id="chat-trabalho" class="chatview" aria-label="Conversa com Trabalho">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="T"></div>
-              <div>
-                <strong>Trabalho</strong>
-                <div class="chatbar__sub">grupo</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="bubble bubble--in">Checklist atualizado. <span class="time">Sex 18:10</span></div>
-            <div class="bubble bubble--in">Alguém revisa o PR? <span class="time">Sex 18:12</span></div>
-            <div class="bubble bubble--out">Eu reviso já. <span class="time">Sex 18:13</span></div>
-
-            <div class="bubble bubble--in">
-              Notas: ajustar variáveis de ambiente, validar secretRefs, e checar rotas.
-              Depois disso, liberar deploy em prelive.
-              <span class="time">Sex 18:14</span>
-            </div>
-
-            <div class="bubble bubble--out">Ok. Vou pegar isso agora. <span class="time">Sex 18:15</span></div>
-
-            <!-- força scroll -->
-            <div class="bubble bubble--in">Linha 1 <span class="time">18:16</span></div>
-            <div class="bubble bubble--in">Linha 2 <span class="time">18:17</span></div>
-            <div class="bubble bubble--in">Linha 3 <span class="time">18:18</span></div>
-            <div class="bubble bubble--in">Linha 4 <span class="time">18:19</span></div>
-            <div class="bubble bubble--in">Linha 5 <span class="time">18:20</span></div>
-            <div class="bubble bubble--in">Linha 6 <span class="time">18:21</span></div>
-            <div class="bubble bubble--in">Linha 7 <span class="time">18:22</span></div>
-            <div class="bubble bubble--in">Linha 8 <span class="time">18:23</span></div>
-            <div class="bubble bubble--in">Linha 9 <span class="time">18:24</span></div>
-            <div class="bubble bubble--in">Linha 10 <span class="time">18:25</span></div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
-
-        <!-- ARCHIVED CHAT: Grupo antigo (curta) -->
-        <section id="chat-grupo-antigo" class="chatview" aria-label="Conversa com Grupo antigo">
-          <header class="chatbar">
-            <a class="back" href="#home" aria-label="Voltar">‹</a>
-            <div class="chatbar__who">
-              <div class="avatar avatar--small" data-initial="G"></div>
-              <div>
-                <strong>Grupo antigo</strong>
-                <div class="chatbar__sub">silenciado</div>
-              </div>
-            </div>
-            <div class="chatbar__actions">
-              <button class="icon-btn" type="button" aria-label="Menu">⋮</button>
-            </div>
-          </header>
-
-          <div class="chatmessages" role="log" aria-label="Mensagens">
-            <div class="bubble bubble--in">👍 <span class="time">Ago</span></div>
-          </div>
-
-          <footer class="chatinput">
-            <button class="chip" type="button" aria-label="Emoji">🙂</button>
-            <input class="chatinput__field" type="text" placeholder="Mensagem" />
-            <button class="chip chip--send" type="button" aria-label="Enviar">➤</button>
-          </footer>
-        </section>
+          <div class="list" id="list-calls"></div>
+        </div>
       </section>
-    </main>
-  </body>
+
+      <nav class="bottomnav">
+        <label class="tab" for="tab-chats">
+          <span class="tab__icon">💬</span><span class="tab__text">Chats</span>
+        </label>
+        <label class="tab" for="tab-archived">
+          <span class="tab__icon">🗄️</span><span class="tab__text">Archived</span>
+        </label>
+        <label class="tab" for="tab-calls">
+          <span class="tab__icon">📞</span><span class="tab__text">Calls</span>
+        </label>
+      </nav>
+
+      <div id="chat-views-container"></div>
+
+    </section>
+  </main>
+
+  <script>
+    // Utilitário para criar IDs seguros
+    const createId = (name) => 'chat-' + name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+    // Função Principal de Carregamento
+    async function initApp() {
+      try {
+        // 1. Carrega Configurações Gerais
+        const config = await fetch('config.json').then(r => r.json());
+        applyConfig(config);
+
+        // 2. Carrega Dados do Caso
+        const [chatsData, callsData, archivedData, messagesData] = await Promise.all([
+          fetch('chats.json').then(r => r.json()),
+          fetch('calls.json').then(r => r.json()),
+          fetch('archived.json').then(r => r.json()),
+          fetch('messages.json').then(r => r.json())
+        ]);
+
+        // 3. Renderiza Listas
+        renderList(chatsData.chats, 'list-chats', 'badge-chats');
+        renderList(archivedData.archived, 'list-archived', 'badge-archived');
+        renderCalls(callsData.calls);
+
+        // 4. Renderiza Telas de Conversa (Junta Chats + Arquivados)
+        const allConversations = [...chatsData.chats, ...archivedData.archived];
+        renderChatViews(allConversations, messagesData.messages);
+
+      } catch (error) {
+        console.error("Erro ao carregar o jogo:", error);
+        document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:20px'>Erro ao carregar arquivos JSON.<br>Use um Local Server.</h2>";
+      }
+    }
+
+    // Aplica configurações do config.json
+    function applyConfig(config) {
+      document.title = config.pageTitle || "App Clone";
+      document.getElementById('app-name').textContent = config.appName || "WhatsApp";
+      document.getElementById('app-status').textContent = config.appStatus || "online";
+      // Se quiser mudar cor via config (opcional)
+      if (config.themeColor) {
+        document.documentElement.style.setProperty('--app-color', config.themeColor);
+      }
+    }
+
+    // Renderiza Listas (Chats e Arquivados usam a mesma estrutura)
+    function renderList(items, containerId, badgeId) {
+      const container = document.getElementById(containerId);
+      const badge = document.getElementById(badgeId);
+
+      if (badge) badge.textContent = items ? items.length : 0;
+      if (!items) return;
+
+      items.forEach(item => {
+        const chatId = createId(item.name);
+        const initial = item.name.charAt(0);
+
+        let pillHtml = '';
+        if (item.muted) pillHtml = `<span class="pill pill--muted">M</span>`;
+        else if (item.unread > 0) pillHtml = `<span class="pill">${item.unread}</span>`;
+
+        const html = `
+            <a class="row row--chat row-link" href="#${chatId}">
+              <div class="avatar" data-initial="${initial}">
+                 ${item.photo ? `<img src="${item.photo}" class="avatar-img" onerror="this.style.display='none'">` : ''}
+              </div>
+              <div class="row__main">
+                <div class="row__top">
+                  <strong>${item.name}</strong>
+                  <span class="meta">${item.time}</span>
+                </div>
+                <div class="row__bottom">
+                  <span class="preview">${item.lastMessage}</span>
+                  ${pillHtml}
+                </div>
+              </div>
+            </a>
+          `;
+        container.innerHTML += html;
+      });
+    }
+
+    // Renderiza Chamadas
+    function renderCalls(calls) {
+      const container = document.getElementById('list-calls');
+      document.getElementById('badge-calls').textContent = calls ? calls.length : 0;
+      if (!calls) return;
+
+      calls.forEach(call => {
+        const initial = call.nameOrNumber.charAt(0);
+        const icon = call.direction === 'out' ? '↗' : '↙';
+        const typeClass = call.direction === 'out' ? 'call-tag--out' : 'call-tag--in';
+        const statusText = call.status === 'missed' ? 'Não atendida' : (call.duration || 'Cancelada');
+
+        const html = `
+            <div class="row row--call">
+              <div class="avatar avatar--call" data-initial="${initial}"></div>
+              <div class="row__main">
+                <div class="row__top">
+                  <strong>${call.nameOrNumber}</strong>
+                  <span class="meta">${call.time}</span>
+                </div>
+                <div class="row__bottom">
+                  <span class="preview">
+                    <span class="call-tag ${typeClass}">${icon}</span>
+                    ${call.direction === 'in' ? 'Entrada' : 'Saída'} • ${statusText}
+                  </span>
+                  <span class="call-icon">📞</span>
+                </div>
+              </div>
+            </div>
+          `;
+        container.innerHTML += html;
+      });
+    }
+
+    // Renderiza as Telas de Conversa (Views)
+    function renderChatViews(list, messagesData) {
+      const container = document.getElementById('chat-views-container');
+      if (!list) return;
+
+      list.forEach(chat => {
+        const chatId = createId(chat.name);
+        const initial = chat.name.charAt(0);
+        const msgs = messagesData[chat.name] || [];
+
+        let msgsHtml = '';
+
+        if (msgs.length === 0) {
+          msgsHtml = `<div class="dayline"><span>Início da conversa criptografada</span></div>`;
+        } else {
+          msgs.forEach(m => {
+            if (m.type === 'dayline') {
+              msgsHtml += `<div class="dayline"><span>${m.text}</span></div>`;
+            } else {
+              msgsHtml += `<div class="bubble bubble--${m.type}">${m.text} <span class="time">${m.time}</span></div>`;
+            }
+          });
+        }
+
+        const html = `
+            <section id="${chatId}" class="chatview" aria-label="Conversa com ${chat.name}">
+              <header class="chatbar">
+                <a class="back" href="#home">‹</a>
+                <div class="chatbar__who">
+                  <div class="avatar avatar--small" data-initial="${initial}">
+                    ${chat.photo ? `<img src="${chat.photo}" class="avatar-img" onerror="this.style.display='none'">` : ''}
+                  </div>
+                  <div>
+                    <strong>${chat.name}</strong>
+                    <div class="chatbar__sub">online</div>
+                  </div>
+                </div>
+                <div class="chatbar__actions">
+                  <button class="icon-btn">📞</button>
+                  <button class="icon-btn">⋮</button>
+                </div>
+              </header>
+
+              <div class="chatmessages">
+                ${msgsHtml}
+              </div>
+
+              <footer class="chatinput">
+                <button class="chip">🙂</button>
+                <input class="chatinput__field" type="text" placeholder="Mensagem" readonly />
+                <button class="chip chip--send">➤</button>
+              </footer>
+            </section>
+          `;
+        container.innerHTML += html;
+      });
+    }
+
+    // Inicia a aplicação
+    initApp();
+  </script>
+</body>
+
 </html>
