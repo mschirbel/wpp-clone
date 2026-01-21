@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Carregando...</title>
+  <title>Caso Santa Aurora - Celular da Vítima</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <main class="page">
-    <section class="phone" aria-label="App Clone">
+    <section class="phone" aria-label="WhatsApp clone">
       <div id="home"></div>
 
       <input class="tab-input" type="radio" name="tab" id="tab-chats" checked />
@@ -21,8 +21,8 @@
         <div class="topbar__title">
           <span class="app-dot" aria-hidden="true"></span>
           <div>
-            <h1 id="app-name">App</h1>
-            <p class="subtitle" id="app-status">...</p>
+            <h1>WhatsApp</h1>
+            <p class="subtitle">online</p>
           </div>
         </div>
         <div class="topbar__actions">
@@ -81,57 +81,162 @@
   </main>
 
   <script>
-    // Utilitário para criar IDs seguros
+    const GAME_DATA = {
+      // LISTA DE CONVERSAS ATIVAS
+      chats: [
+        {
+          name: "Clara 🤍",
+          time: "19:35",
+          lastMessage: "Vai tranquila. Qualquer coisa grita.",
+          unread: 0,
+          photo: ""
+        },
+        {
+          name: "Número Desconhecido",
+          time: "22:45",
+          lastMessage: "Sei que você tá lá embaixo.",
+          unread: 1,
+          photo: ""
+        },
+        {
+          name: "Marcos (Chefe)",
+          time: "16:25",
+          lastMessage: "Amanhã a gente resolve tudo. Eu prometo.",
+          unread: 0,
+          photo: ""
+        },
+        {
+          name: "Sra. Helena",
+          time: "13:50",
+          lastMessage: "Se não pedir demissão, eu acabo com vc.",
+          unread: 0,
+          photo: ""
+        },
+        {
+          name: "🏢 Condomínio Santa Aurora",
+          time: "Ontem",
+          lastMessage: "Ricardo Síndico: Manutenção Elevadores...",
+          unread: 3,
+          muted: true,
+          photo: ""
+        },
+        {
+          name: "Vagas & Oportunidades SP",
+          time: "Ontem",
+          lastMessage: "Olá, tenho interesse na vaga...",
+          unread: 0,
+          photo: ""
+        }
+      ],
+
+      // LISTA DE ARQUIVADOS
+      archived: [
+        {
+          name: "Mãe",
+          time: "Dez 28",
+          lastMessage: "Filha, depositei o dinheiro do aluguel.",
+          unread: 0,
+          photo: ""
+        },
+        {
+          name: "Ex-Namorado (Pedro)",
+          time: "Jan 02",
+          lastMessage: "Para de me ligar, Júlia. Acabou.",
+          unread: 0,
+          photo: ""
+        }
+      ],
+
+      // HISTÓRICO DE CHAMADAS
+      calls: [
+        { nameOrNumber: "Marcos (Chefe)", time: "Ontem 21:15", direction: "in", status: "missed", duration: "" },
+        { nameOrNumber: "Clara 🤍", time: "Ontem 14:40", direction: "out", status: "answered", duration: "14 min" },
+        { nameOrNumber: "Número Desconhecido", time: "Ontem 12:00", direction: "in", status: "missed", duration: "" },
+        { nameOrNumber: "Mãe", time: "Sexta", direction: "out", status: "answered", duration: "32 min" }
+      ],
+
+      // CONTEÚDO DAS MENSAGENS (DIREÇÃO CORRIGIDA)
+      messages: {
+        "Clara 🤍": [
+          { type: "out", text: "Amiga, o clima tá horrível aqui. A Helena me olhou com um ódio hj...", time: "14:00" },
+          { type: "in", text: "Eu te avisei, Ju. Ela é perigosa. Ouvi ela gritando no telefone que ia 'dar um fim nisso'.", time: "14:05" },
+          { type: "out", text: "Vc acha que ela sabe do Marcos?", time: "14:06" },
+          { type: "in", text: "Certeza. O Marcos é mole, deve ter deixado rastro. Se cuida, tá?", time: "14:10" },
+          { type: "in", text: "Nossa, tô mto enjoada hj. Acho que minha pressão caiu. Vou ficar deitada aqui no quarto qnd a Dona Beatriz sair.", time: "14:12" },
+          { type: "dayline", text: "Hoje" },
+          { type: "out", text: "Vou descer pra lavanderia mais tarde, qnd a Helena dormir. Não quero cruzar com ela.", time: "19:30" },
+          { type: "in", text: "Vai tranquila. Qualquer coisa grita.", time: "19:35" }
+        ],
+
+        "Marcos (Chefe)": [
+          { type: "out", text: "Precisamos conversar. A Clara disse que a Helena tá furiosa.", time: "16:00" },
+          { type: "in", text: "Júlia, não escreve isso aqui. A Helena pega meu celular.", time: "16:15" },
+          { type: "out", "text": "Eu não aguento mais ser segredo, Marcos. Vc prometeu que ia resolver.", "time": "16:16" },
+          { type: "in", text: "E eu vou. Mas hj não. Hj eu tenho aquela reunião importante com o Japão no escritório (1001).", time: "16:20" },
+          { type: "out", text: "Posso subir lá depois?", time: "16:21" },
+          { type: "in", text: "NÃO. Hoje não sobe ninguém. Vou ficar trancado em call a noite toda. Amanhã a gente resolve tudo. Eu prometo.", time: "16:25" }
+        ],
+
+        "Sra. Helena": [
+          { type: "in", text: "Júlia, onde você colocou a camisa social azul do Marcos?", time: "09:00" },
+          { type: "out", text: "Bom dia Sra. Helena. Está na lavanderia, vou passar hoje.", time: "09:05" },
+          { type: "in", text: "Você está muito desleixada ultimamente. Acho que sua cabeça está em outro lugar.", time: "09:10" },
+          { type: "dayline", text: "Hoje" },
+          { type: "in", text: "Encontrei isso no escritório do Marcos. Esse batom não é meu.", time: "13:45" },
+          { type: "in", text: "Eu sei o jogo que você está jogando.", time: "13:46" },
+          { type: "in", text: "Aproveite enquanto pode. Pessoas como você são descartáveis. Se você não pedir demissão até amanhã, eu vou garantir que você nunca mais consiga emprego nem limpando chão.", time: "13:50" }
+        ],
+
+        "🏢 Condomínio Santa Aurora": [
+          { type: "dayline", text: "Ontem" },
+          { type: "in", text: "Ricardo Síndico: ⚠️ Aviso de Manutenção", time: "08:00" },
+          { type: "in", text: "A manutenção do elevador social foi concluída. O motor foi trocado.", time: "08:01" },
+          { type: "in", text: "Atenção: O elevador está mais rápido. Medimos, quase 2 segundos por andar.", time: "08:02" },
+          { type: "in", text: "Nota: O display digital queimou e não mostra o andar atual. Peça de reposição chega em 30 dias.", time: "08:03" }
+        ],
+
+        "Vagas & Oportunidades SP": [
+          { type: "in", text: "+55 11 99999-1234: Vaga Auxiliar de Limpeza - Zona Sul.", time: "Ontem" },
+          { type: "in", text: "+55 11 98888-5678: Procuro Babá para finais de semana no Morumbi. Paga-se bem.", time: "Ontem" },
+          { type: "out", text: "Olá, tenho interesse na vaga de babá. Tenho referências.", time: "Ontem" }
+        ],
+
+        "Número Desconhecido": [
+          { type: "dayline", text: "15 de Jan" },
+          { type: "in", text: "VADIA.", time: "23:14" },
+          { type: "dayline", "text": "Hoje" },
+          { type: "in", text: "Sei que você tá lá embaixo.", time: "22:45" }
+        ],
+
+        "Mãe": [
+          { type: "in", text: "Filha, depositei o dinheiro do aluguel.", time: "Dez 28" },
+          { type: "out", text: "Obrigada mãe! Te amo.", time: "Dez 28" }
+        ],
+        "Ex-Namorado (Pedro)": [
+          { type: "in", text: "Eu sinto sua falta...", time: "Jan 02" },
+          { type: "out", text: "Para de me ligar, Pedro. Acabou.", time: "Jan 02" }
+        ]
+      }
+    };
+
+    // --- LÓGICA DO SISTEMA ---
     const createId = (name) => 'chat-' + name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
-    // Função Principal de Carregamento
-    async function initApp() {
-      try {
-        // 1. Carrega Configurações Gerais
-        const config = await fetch('config.json').then(r => r.json());
-        applyConfig(config);
+    function initApp() {
+      renderList(GAME_DATA.chats, 'list-chats', 'badge-chats');
+      renderList(GAME_DATA.archived, 'list-archived', 'badge-archived');
+      renderCalls(GAME_DATA.calls);
 
-        // 2. Carrega Dados do Caso
-        const [chatsData, callsData, archivedData, messagesData] = await Promise.all([
-          fetch('chats.json').then(r => r.json()),
-          fetch('calls.json').then(r => r.json()),
-          fetch('archived.json').then(r => r.json()),
-          fetch('messages.json').then(r => r.json())
-        ]);
-
-        // 3. Renderiza Listas
-        renderList(chatsData.chats, 'list-chats', 'badge-chats');
-        renderList(archivedData.archived, 'list-archived', 'badge-archived');
-        renderCalls(callsData.calls);
-
-        // 4. Renderiza Telas de Conversa (Junta Chats + Arquivados)
-        const allConversations = [...chatsData.chats, ...archivedData.archived];
-        renderChatViews(allConversations, messagesData.messages);
-
-      } catch (error) {
-        console.error("Erro ao carregar o jogo:", error);
-        document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:20px'>Erro ao carregar arquivos JSON.<br>Use um Local Server.</h2>";
-      }
+      const allConversations = [...GAME_DATA.chats, ...GAME_DATA.archived];
+      renderChatViews(allConversations, GAME_DATA.messages);
     }
 
-    // Aplica configurações do config.json
-    function applyConfig(config) {
-      document.title = config.pageTitle || "App Clone";
-      document.getElementById('app-name').textContent = config.appName || "WhatsApp";
-      document.getElementById('app-status').textContent = config.appStatus || "online";
-      // Se quiser mudar cor via config (opcional)
-      if (config.themeColor) {
-        document.documentElement.style.setProperty('--app-color', config.themeColor);
-      }
-    }
-
-    // Renderiza Listas (Chats e Arquivados usam a mesma estrutura)
     function renderList(items, containerId, badgeId) {
       const container = document.getElementById(containerId);
       const badge = document.getElementById(badgeId);
 
       if (badge) badge.textContent = items ? items.length : 0;
-      if (!items) return;
+      container.innerHTML = '';
 
       items.forEach(item => {
         const chatId = createId(item.name);
@@ -162,11 +267,10 @@
       });
     }
 
-    // Renderiza Chamadas
     function renderCalls(calls) {
       const container = document.getElementById('list-calls');
       document.getElementById('badge-calls').textContent = calls ? calls.length : 0;
-      if (!calls) return;
+      container.innerHTML = '';
 
       calls.forEach(call => {
         const initial = call.nameOrNumber.charAt(0);
@@ -196,10 +300,9 @@
       });
     }
 
-    // Renderiza as Telas de Conversa (Views)
     function renderChatViews(list, messagesData) {
       const container = document.getElementById('chat-views-container');
-      if (!list) return;
+      container.innerHTML = '';
 
       list.forEach(chat => {
         const chatId = createId(chat.name);
@@ -254,7 +357,6 @@
       });
     }
 
-    // Inicia a aplicação
     initApp();
   </script>
 </body>
